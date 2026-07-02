@@ -90,7 +90,7 @@ class BalanceTransaction(Base):
     )
     updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), nullable=False)
 
-    user_ref: Mapped[User] = relationship(back_populates="balance_ref", lazy="raise")
+    user_ref: Mapped[User] = relationship(lazy="raise")
     redemption_ref: Mapped[CodeRedemptions | None] = relationship(lazy="raise")
     game_ref: Mapped[GameResult | None] = relationship(lazy="raise")
 
