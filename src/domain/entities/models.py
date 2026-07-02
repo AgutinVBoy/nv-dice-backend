@@ -11,6 +11,7 @@ from sqlalchemy import (
     String,
     Text,
     func,
+    CheckConstraint,
 )
 from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -114,7 +115,7 @@ class Code(Base):
     starts_at: Mapped[datetime | None] = mapped_column(nullable=True)
     expires_at: Mapped[datetime | None] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now(), nullable=False)
-    updated_at: Mapped[datetime | None] = mapped_column(onupdate=func.now(),nullable=True)
+    updated_at: Mapped[datetime | None] = mapped_column(onupdate=func.now(), nullable=True)
     created_by_id: Mapped[int | None] = mapped_column(
         BigInteger,
         ForeignKey("users.id", ondelete="SET NULL"),
@@ -153,3 +154,15 @@ class CodeRedemptions(Base):
 
     user_ref: Mapped[User] = relationship(lazy="raise")
     code_ref: Mapped[Code] = relationship(back_populates="redemptions", lazy="raise")
+
+
+class SystemConfiguration(Base):
+    __tablename__ = "system_configurations"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, default=1)  # TODO: Отдельной миграцией создать триггер, запрещающий удалять строки
+    min_game_bet: Mapped[Decimal] = mapped_column(Numeric(12, 2), server_default="1.00", nullable=False)
+    is_maintenance_enabled: Mapped[bool] = mapped_column(Boolean, server_default="false", default=False)
+
+    __table_args__ = (
+        CheckConstraint("id = 1", name="single_row_configuration_constraint"),
+    )
