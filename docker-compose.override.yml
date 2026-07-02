@@ -1,0 +1,4 @@
+services:
+  postgres:
+    ports:
+      - "${DB_EXTERNAL_PORT}:${DB_PORT}"

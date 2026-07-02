@@ -1,0 +1,19 @@
+services:
+  postgres:
+    container_name: nv-dice-postgres
+    image: postgres:15-alpine
+    expose:
+      - "${DB_PORT}"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      PGPORT: ${DB_PORT}
+    volumes:
+      - ./volumes/postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 5
