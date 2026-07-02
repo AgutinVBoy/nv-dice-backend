@@ -9,5 +9,6 @@ class CodeStatus(StrEnum):
 
 
 class TransactionType(StrEnum):
+    GAME = "game"
     CODE_REDEEM = "code_redeem"
     ADMIN_ADJUST = "admin_adjust"
