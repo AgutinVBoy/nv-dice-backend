@@ -32,6 +32,14 @@ msgstr "Ошибка шлюза"
 msgid "ERR_INTERNAL_SERVER_ERROR"
 msgstr "Внутренняя ошибка сервера"
 
+# Errors: auth
+
+msgid "ERR_INVALID_TOKEN_FORMAT"
+msgstr "Отсутствует или некорректный формат токена"
+
+msgid "ERR_TOKEN_REVOKED"
+msgstr "Токен отозван после смены пароля"
+
 # OpenAPI / Swagger
 
 msgid "OPENAPI_BEARER_AUTH_DESCRIPTION"
