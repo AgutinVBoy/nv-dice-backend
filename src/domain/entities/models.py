@@ -37,7 +37,7 @@ class User(Base):
     password_updated_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
     balance_ref: Mapped[UserBalance] = relationship(back_populates="user_ref", lazy="raise")
-    role_ref: Mapped["Role"] = relationship("Role", lazy="raise")
+    role_ref: Mapped[Role] = relationship(lazy="raise")
 
 
 class UserBalance(Base):
@@ -118,22 +118,18 @@ class Code(Base):
     created_by_id: Mapped[int | None] = mapped_column(
         BigInteger,
         ForeignKey("users.id", ondelete="SET NULL"),
-        nullable=True
+        nullable=True,
     )
     updated_by_id: Mapped[int | None] = mapped_column(
         BigInteger,
         ForeignKey("users.id", ondelete="SET NULL"),
-        nullable=True
+        nullable=True,
     )
 
-    created_by_ref: Mapped["User"] = relationship("User", lazy="raise")
-    updated_by_ref: Mapped["User"] = relationship("User", lazy="raise")
+    created_by_ref: Mapped[User] = relationship(lazy="raise")
+    updated_by_ref: Mapped[User] = relationship(lazy="raise")
 
-    redemptions: Mapped[list["CodeRedemptions"]] = relationship(
-        "CodeRedemptions",
-        back_populates="code_ref",
-        lazy="raise"
-    )
+    redemptions: Mapped[list[CodeRedemptions]] = relationship(back_populates="code_ref", lazy="raise")
 
 
 class CodeRedemptions(Base):
@@ -142,18 +138,18 @@ class CodeRedemptions(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     user_id: Mapped[int | None] = mapped_column(
         BigInteger,
-        ForeignKey("users.id", onupdate="CASCADE", ondelete="SET NULL"),
+        ForeignKey("users.id", ondelete="SET NULL"),
         nullable=True,
         index=True,
     )
     code_id: Mapped[int] = mapped_column(
         BigInteger,
-        ForeignKey("codes.id", onupdate="CASCADE"),
+        ForeignKey("codes.id"),
         nullable=False,
         index=True,
     )
     amount: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=2), nullable=False)
     redeemed_at: Mapped[datetime] = mapped_column(server_default=func.now(), nullable=False)
 
-    user_ref: Mapped["User"] = relationship("User", lazy="raise")
-    code_ref: Mapped["Code"] = relationship("Code", back_populates="redemptions", lazy="raise")
+    user_ref: Mapped[User] = relationship(lazy="raise")
+    code_ref: Mapped[Code] = relationship(back_populates="redemptions", lazy="raise")
