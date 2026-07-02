@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime
 from decimal import Decimal
 
@@ -14,7 +16,8 @@ from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 from src.domain.entities.enums import (
-    CodeStatus
+    CodeStatus,
+    TransactionType,
 )
 
 
@@ -33,7 +36,53 @@ class User(Base):
     password: Mapped[str] = mapped_column(Text, nullable=False)
     password_updated_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
+    balance_ref: Mapped[UserBalance] = relationship(back_populates="user_ref", lazy="raise")
     role_ref: Mapped["Role"] = relationship("Role", lazy="raise")
+
+
+class UserBalance(Base):
+    __tablename__ = "user_balances"
+
+    user_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        primary_key=True
+    )
+    balance: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=2), server_default="0.00", nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now(), nullable=False)
+
+    user_ref: Mapped[User] = relationship(back_populates="balance_ref", lazy="raise")
+
+
+class BalanceTransaction(Base):
+    __tablename__ = "balance_transactions"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    transaction_type: Mapped[TransactionType] = mapped_column(
+        PgEnum(
+            TransactionType,
+            name="transaction_type_enum",
+            values_callable=lambda obj: [e.value for e in obj]
+        ),
+        nullable=False,
+    )
+    amount: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=2), nullable=False)
+    new_balance: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=2), nullable=False)
+    code_redemption_id: Mapped[int | None] = mapped_column(
+        BigInteger,
+        ForeignKey("code_redemptions.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), nullable=False)
+
+    user_ref: Mapped[User] = relationship(back_populates="balance_ref", lazy="raise")
+    redemption_ref: Mapped[CodeRedemptions | None] = relationship(lazy="raise")
 
 
 class Role(Base):
