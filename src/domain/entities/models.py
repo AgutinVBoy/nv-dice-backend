@@ -12,6 +12,7 @@ from sqlalchemy import (
     Text,
     func,
     CheckConstraint,
+    Index,
 )
 from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -19,6 +20,8 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from src.domain.entities.enums import (
     CodeStatus,
     TransactionType,
+    GameResult,
+    GameBetType,
 )
 
 
@@ -80,10 +83,16 @@ class BalanceTransaction(Base):
         ForeignKey("code_redemptions.id", ondelete="SET NULL"),
         nullable=True,
     )
+    game_id: Mapped[int | None] = mapped_column(
+        BigInteger,
+        ForeignKey("games.id", ondelete="SET NULL"),
+        nullable=True,
+    )
     updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), nullable=False)
 
     user_ref: Mapped[User] = relationship(back_populates="balance_ref", lazy="raise")
     redemption_ref: Mapped[CodeRedemptions | None] = relationship(lazy="raise")
+    game_ref: Mapped[GameResult | None] = relationship(lazy="raise")
 
 
 class Role(Base):
@@ -154,6 +163,58 @@ class CodeRedemptions(Base):
 
     user_ref: Mapped[User] = relationship(lazy="raise")
     code_ref: Mapped[Code] = relationship(back_populates="redemptions", lazy="raise")
+
+
+class Game(Base):
+    __tablename__ = "games"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now(), nullable=False)
+    user_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    result: Mapped[GameResult] = mapped_column(
+        PgEnum(
+            GameResult,
+            name="game_result_enum",
+            values_callable=lambda obj: [e.value for e in obj]
+        ),
+        nullable=False,
+    )
+    bet_amount: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=2), nullable=False)
+    win_amount: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=2), nullable=False)
+    probability: Mapped[int] = mapped_column(nullable=False)
+    bet_type: Mapped[GameBetType] = mapped_column(
+        PgEnum(
+            GameBetType,
+            name="game_bet_type_enum",
+            values_callable=lambda obj: [e.value for e in obj]
+        ),
+        nullable=False,
+    )
+    target_range_min: Mapped[int] = mapped_column(nullable=False)
+    target_range_max: Mapped[int] = mapped_column(nullable=False)
+    rolled_value: Mapped[int] = mapped_column(nullable=False)
+    salt_left: Mapped[str] = mapped_column(Text, nullable=False)
+    salt_right: Mapped[str] = mapped_column(Text, nullable=False)
+    game_hash: Mapped[str] = mapped_column(Text, nullable=False)
+
+    user_ref: Mapped[User] = relationship(back_populates="games_ref", lazy="raise")
+
+    __table_args__ = (
+        Index(
+            "ix_games_user_id_created_at",
+            user_id,
+            created_at.desc()
+        ),
+
+        Index(
+            "ix_games_created_at",
+            created_at.desc()
+        ),
+    )
 
 
 class SystemConfiguration(Base):
