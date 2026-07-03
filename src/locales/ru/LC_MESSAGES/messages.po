@@ -74,6 +74,23 @@ msgstr "Обновить токен доступа"
 msgid "API_CHANGE_PASSWORD"
 msgstr "Сменить пароль"
 
+# Errors: validation
+
+msgid "ERR_PASSWORD_NO_UPPERCASE"
+msgstr "Пароль должен содержать хотя бы одну заглавную букву"
+
+msgid "ERR_PASSWORD_NO_LOWERCASE"
+msgstr "Пароль должен содержать хотя бы одну строчную букву"
+
+msgid "ERR_PASSWORD_NO_DIGIT"
+msgstr "Пароль должен содержать хотя бы одну цифру"
+
+msgid "ERR_PASSWORD_NO_SPECIAL"
+msgstr "Пароль должен содержать хотя бы один специальный символ"
+
+msgid "ERR_PASSWORD_IS_WEAK"
+msgstr "Пароль недостаточно надёжный"
+
 # OpenAPI / Swagger
 
 msgid "OPENAPI_BEARER_AUTH_DESCRIPTION"
