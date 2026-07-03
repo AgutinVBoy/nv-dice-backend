@@ -34,11 +34,45 @@ msgstr "Внутренняя ошибка сервера"
 
 # Errors: auth
 
+msgid "ERR_INVALID_CREDENTIALS"
+msgstr "Неверный никнейм или пароль"
+
+msgid "ERR_INVALID_OLD_PASSWORD"
+msgstr "Неверный текущий пароль"
+
+msgid "ERR_INVALID_REFRESH_TOKEN"
+msgstr "Недействительный refresh-токен"
+
 msgid "ERR_INVALID_TOKEN_FORMAT"
 msgstr "Отсутствует или некорректный формат токена"
 
 msgid "ERR_TOKEN_REVOKED"
 msgstr "Токен отозван после смены пароля"
+
+msgid "ERR_USERNAME_ALREADY_EXISTS"
+msgstr "Пользователь с таким никнеймом уже существует"
+
+msgid "ERR_USER_INACTIVE"
+msgstr "Учётная запись деактивирована"
+
+# Errors: users
+
+msgid "ERR_USER_NOT_FOUND"
+msgstr "Пользователь с идентификатором {user_id} не найден"
+
+# API summaries
+
+msgid "API_LOGIN"
+msgstr "Авторизация"
+
+msgid "API_REGISTER"
+msgstr "Регистрация"
+
+msgid "API_REFRESH"
+msgstr "Обновить токен доступа"
+
+msgid "API_CHANGE_PASSWORD"
+msgstr "Сменить пароль"
 
 # OpenAPI / Swagger
 
