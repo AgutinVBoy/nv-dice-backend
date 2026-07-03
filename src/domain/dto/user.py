@@ -1,6 +1,10 @@
+from datetime import datetime
+from decimal import Decimal
+
 from pydantic import BaseModel, field_validator, Field
 
 from src.domain.dto.common import StrongPassword
+from src.domain.dto.role import RoleDTO
 
 
 class UserBaseDTO(BaseModel):
@@ -14,3 +18,18 @@ class UserBaseDTO(BaseModel):
 
 class UserCreateDTO(UserBaseDTO):
     password: StrongPassword
+
+
+class UserResponseDTO(UserBaseDTO):
+    id: int
+    role: RoleDTO
+
+
+class UserBalanceDTO(UserResponseDTO):
+    balance: Decimal
+
+
+class UserAdminResponseDTO(UserBalanceDTO):
+    is_active: bool
+    registered_at: datetime
+    password_updated_at: datetime
