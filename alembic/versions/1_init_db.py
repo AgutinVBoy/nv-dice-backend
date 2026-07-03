@@ -49,7 +49,7 @@ def upgrade() -> None:
     sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
     sa.Column('is_active', sa.Boolean(), server_default='true', nullable=False),
     sa.Column('username', sa.String(length=30), nullable=False),
-    sa.Column('role', sa.String(length=10), nullable=False),
+    sa.Column('role', sa.String(length=10), server_default='user', nullable=False),
     sa.Column('registered_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.Column('password', sa.Text(), nullable=False),
     sa.Column('password_updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),

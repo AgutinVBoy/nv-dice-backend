@@ -35,13 +35,17 @@ class User(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     is_active: Mapped[bool] = mapped_column(Boolean, server_default="true", default=True)
     username: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
-    role: Mapped[str] = mapped_column(String(10), ForeignKey("roles.code", onupdate="CASCADE"))
+    role: Mapped[str] = mapped_column(
+        String(10),
+        ForeignKey("roles.code", onupdate="CASCADE"),
+        server_default="'user'"
+    )
     registered_at: Mapped[datetime] = mapped_column(server_default=func.now())
     password: Mapped[str] = mapped_column(Text, nullable=False)
     password_updated_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
     balance_ref: Mapped[UserBalance] = relationship(back_populates="user_ref", lazy="raise")
-    role_ref: Mapped[Role] = relationship(lazy="raise")
+    role_ref: Mapped[Role] = relationship(foreign_keys=[role], lazy="raise")
 
 
 class UserBalance(Base):
@@ -55,7 +59,7 @@ class UserBalance(Base):
     balance: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=2), server_default="0.00", nullable=False)
     updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now(), nullable=False)
 
-    user_ref: Mapped[User] = relationship(back_populates="balance_ref", lazy="raise")
+    user_ref: Mapped[User] = relationship(back_populates="balance_ref", foreign_keys=[user_id], lazy="raise")
 
 
 class BalanceTransaction(Base):
@@ -90,9 +94,9 @@ class BalanceTransaction(Base):
     )
     updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), nullable=False)
 
-    user_ref: Mapped[User] = relationship(lazy="raise")
-    redemption_ref: Mapped[CodeRedemptions | None] = relationship(lazy="raise")
-    game_ref: Mapped[GameResult | None] = relationship(lazy="raise")
+    user_ref: Mapped[User] = relationship(foreign_keys=[user_id], lazy="raise")
+    redemption_ref: Mapped[CodeRedemptions | None] = relationship(foreign_keys=[code_redemption_id], lazy="raise")
+    game_ref: Mapped[Game | None] = relationship(foreign_keys=[game_id], lazy="raise")
 
 
 class Role(Base):
@@ -136,8 +140,8 @@ class Code(Base):
         nullable=True,
     )
 
-    created_by_ref: Mapped[User] = relationship(lazy="raise")
-    updated_by_ref: Mapped[User] = relationship(lazy="raise")
+    created_by_ref: Mapped[User] = relationship(foreign_keys=[created_by_id], lazy="raise")
+    updated_by_ref: Mapped[User] = relationship(foreign_keys=[updated_by_id], lazy="raise")
 
     redemptions: Mapped[list[CodeRedemptions]] = relationship(back_populates="code_ref", lazy="raise")
 
@@ -161,8 +165,8 @@ class CodeRedemptions(Base):
     amount: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=2), nullable=False)
     redeemed_at: Mapped[datetime] = mapped_column(server_default=func.now(), nullable=False)
 
-    user_ref: Mapped[User] = relationship(lazy="raise")
-    code_ref: Mapped[Code] = relationship(back_populates="redemptions", lazy="raise")
+    user_ref: Mapped[User] = relationship(foreign_keys=[user_id], lazy="raise")
+    code_ref: Mapped[Code] = relationship(back_populates="redemptions", foreign_keys=[code_id], lazy="raise")
 
 
 class Game(Base):
@@ -201,7 +205,7 @@ class Game(Base):
     salt_right: Mapped[str] = mapped_column(Text, nullable=False)
     game_hash: Mapped[str] = mapped_column(Text, nullable=False)
 
-    user_ref: Mapped[User] = relationship(back_populates="games_ref", lazy="raise")
+    user_ref: Mapped[User] = relationship(foreign_keys=[user_id], lazy="raise")
 
     __table_args__ = (
         Index(
