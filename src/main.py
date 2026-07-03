@@ -8,6 +8,7 @@ from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.middlewares.auth import JWTAuthMiddleware, PUBLIC_PATHS
+from src.api.v1 import v1_router
 from src.core.config import settings
 from src.core.exceptions import setup_exception_handlers
 from src.core.ioc import DatabaseProvider
@@ -28,6 +29,7 @@ MIDDLEWARES = [
 ]
 
 ROUTERS = [
+    (v1_router, "/api/v1"),
 ]
 
 
