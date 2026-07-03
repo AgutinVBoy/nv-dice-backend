@@ -224,7 +224,7 @@ class Game(Base):
 class SystemConfiguration(Base):
     __tablename__ = "system_configurations"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, default=1)  # TODO: Отдельной миграцией создать триггер, запрещающий удалять строки
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, default=1)
     min_game_bet: Mapped[Decimal] = mapped_column(Numeric(12, 2), server_default="1.00", nullable=False)
     is_maintenance_enabled: Mapped[bool] = mapped_column(Boolean, server_default="false", default=False)
 
