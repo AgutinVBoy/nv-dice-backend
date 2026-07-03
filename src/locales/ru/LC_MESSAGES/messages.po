@@ -74,6 +74,17 @@ msgstr "Обновить токен доступа"
 msgid "API_CHANGE_PASSWORD"
 msgstr "Сменить пароль"
 
+msgid "API_GET_ME"
+msgstr "Получить текущего пользователя"
+
+msgid "API_GET_USER"
+msgstr "Получить пользователя по ID"
+
+# Descriptions: users
+
+msgid "DESC_USER_ID"
+msgstr "ID пользователя"
+
 # Errors: validation
 
 msgid "ERR_PASSWORD_NO_UPPERCASE"

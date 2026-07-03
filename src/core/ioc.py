@@ -10,9 +10,11 @@ from sqlalchemy.ext.asyncio import (
 
 from src.core.config import settings
 from src.domain.interfaces.auth_service import IAuthService
+from src.domain.interfaces.user_service import IUserService
 from src.domain.interfaces.user_repo import IUserRepository
 from src.infrastructure.repositories.postgres.user_repo import UserRepository
 from src.services.auth_service import AuthService
+from src.services.user_service import UserService
 
 
 class DatabaseProvider(Provider):
@@ -55,3 +57,9 @@ class ServiceProvider(Provider):
         self, user_repo: IUserRepository, session: AsyncSession
     ) -> IAuthService:
         return AuthService(user_repo, session)
+
+    @provide(scope=Scope.REQUEST)
+    def get_user_service(
+        self, user_repo: IUserRepository, session: AsyncSession
+    ) -> IUserService:
+        return UserService(user_repo, session)

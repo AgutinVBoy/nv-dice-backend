@@ -50,7 +50,7 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
         async with factory() as session:
             row = (
                 await session.execute(
-                    select(User.is_active, User.password_updated_at).where(
+                    select(User.is_active, User.password_updated_at, User.role).where(
                         User.id == payload.user_id
                     )
                 )
@@ -73,4 +73,5 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
             )
 
         request.state.current_user = payload.user_id
+        request.state.is_admin = row.role == "admin"
         return await call_next(request)
