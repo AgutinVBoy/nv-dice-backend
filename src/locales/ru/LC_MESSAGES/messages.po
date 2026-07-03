@@ -106,3 +106,9 @@ msgstr "Пароль недостаточно надёжный"
 
 msgid "OPENAPI_BEARER_AUTH_DESCRIPTION"
 msgstr "JWT access-токен. Получите через POST /api/v1/auth/login или POST /api/v1/auth/register."
+
+msgid "AUTH_LABEL"
+msgstr "Авторизация"
+
+msgid "USERS_LABEL"
+msgstr "Пользователи"
