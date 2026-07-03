@@ -9,6 +9,8 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from src.core.config import settings
+from src.domain.interfaces.user_repo import IUserRepository
+from src.infrastructure.repositories.postgres.user_repo import UserRepository
 
 
 class DatabaseProvider(Provider):
@@ -37,3 +39,9 @@ class DatabaseProvider(Provider):
     ) -> AsyncIterator[AsyncSession]:
         async with factory() as session:
             yield session
+
+
+class RepositoryProvider(Provider):
+    @provide(scope=Scope.REQUEST)
+    def get_user_repo(self, session: AsyncSession) -> IUserRepository:
+        return UserRepository(session)
