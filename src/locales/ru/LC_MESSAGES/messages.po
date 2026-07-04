@@ -60,6 +60,11 @@ msgstr "Учётная запись деактивирована"
 msgid "ERR_USER_NOT_FOUND"
 msgstr "Пользователь с идентификатором {user_id} не найден"
 
+# Errors: user_balances
+
+msgid "ERR_BALANCE_NOT_ENOUGH"
+msgstr "Недостаточно баланса для операции"
+
 # API summaries
 
 msgid "API_LOGIN"
@@ -85,6 +90,11 @@ msgstr "Получить пользователя по ID"
 msgid "DESC_USER_ID"
 msgstr "ID пользователя"
 
+# Descriptions: balance
+
+msgid "API_WITHDRAW"
+msgstr "Вывести средства"
+
 # Errors: validation
 
 msgid "ERR_PASSWORD_NO_UPPERCASE"
@@ -109,6 +119,9 @@ msgstr "JWT access-токен. Получите через POST /api/v1/auth/log
 
 msgid "AUTH_LABEL"
 msgstr "Авторизация"
+
+msgid "BALANCE_LABEL"
+msgstr "Баланс"
 
 msgid "USERS_LABEL"
 msgstr "Пользователи"

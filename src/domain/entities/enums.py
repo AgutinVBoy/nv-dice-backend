@@ -8,6 +8,11 @@ class CodeStatus(StrEnum):
     REVOKED = "revoked"
 
 
+class TransactionDirection(StrEnum):
+    CREDIT = "CREDIT"  # Пополнение
+    DEBIT = "DEBIT"  # Списание
+
+
 class TransactionType(StrEnum):
     GAME = "game"
     CODE_REDEEM = "code_redeem"

@@ -1,8 +1,8 @@
 from datetime import datetime
-from decimal import Decimal
 
 from pydantic import BaseModel, field_validator, Field, ConfigDict, AliasPath
 
+from src.domain.dto.balance import Balance
 from src.domain.dto.common import StrongPassword
 from src.domain.dto.role import RoleDTO
 
@@ -28,7 +28,7 @@ class UserResponseDTO(UserBaseDTO):
 
 
 class UserBalanceDTO(UserResponseDTO):
-    balance: Decimal = Field(validation_alias=AliasPath("balance_ref", "balance"))
+    balance: Balance = Field(validation_alias=AliasPath("balance_ref", "balance"))
 
 
 class UserAdminResponseDTO(UserBalanceDTO):
