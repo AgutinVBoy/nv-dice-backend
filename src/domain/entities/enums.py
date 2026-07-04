@@ -9,8 +9,9 @@ class CodeStatus(StrEnum):
 
 
 class TransactionDirection(StrEnum):
-    CREDIT = "CREDIT"  # Пополнение
-    DEBIT = "DEBIT"  # Списание
+    CREDIT = "credit"  # Пополнение
+    DEBIT = "debit"  # Списание
+    BALANCE = "balance"  # Фиксированный баланс
 
 
 class TransactionType(StrEnum):

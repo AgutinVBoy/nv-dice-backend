@@ -16,12 +16,15 @@ class BalanceDTO(BaseModel):
 
 
 class BalanceChangeRequestDTO(BaseModel):
-    amount: Balance = Field(gt=0)
+    amount: Balance
 
 
-class BalanceChangeDTO(BalanceChangeRequestDTO):
+class BalanceAdminChangeRequestDTO(BalanceChangeRequestDTO):
     user_id: int
     direction: TransactionDirection
+
+
+class BalanceChangeDTO(BalanceAdminChangeRequestDTO):
     reason: TransactionType
 
 

@@ -65,6 +65,9 @@ msgstr "Пользователь с идентификатором {user_id} н�
 msgid "ERR_BALANCE_NOT_ENOUGH"
 msgstr "Недостаточно баланса для операции"
 
+msgid "ERR_AMOUNT_IS_ZERO"
+msgstr "Сумма операции должна быть больше нуля"
+
 # API summaries
 
 msgid "API_LOGIN"
@@ -94,6 +97,9 @@ msgstr "ID пользователя"
 
 msgid "API_WITHDRAW"
 msgstr "Вывести средства"
+
+msgid "API_MODIFY_BALANCE"
+msgstr "Редактировать баланс"
 
 # Errors: validation
 

@@ -14,6 +14,9 @@ class BalanceService(IBalanceService):
         self.session = session
 
     async def update_balance(self, data: BalanceChangeDTO, auto_commit: bool = True) -> InternalBalanceOperationResultDTO:
+        if data.direction != TransactionDirection.BALANCE and data.amount == 0:
+            raise ApiError.unprocessable_entity(t("ERR_AMOUNT_IS_ZERO"))
+
         user_balance_query = await self.session.execute(
             select(UserBalance).where(UserBalance.user_id == data.user_id).with_for_update()
         )
@@ -28,16 +31,19 @@ class BalanceService(IBalanceService):
                 new_balance = user_balance.balance - data.amount
                 if new_balance < 0:
                     raise ApiError.conflict(t("ERR_BALANCE_NOT_ENOUGH"))
+            case TransactionDirection.BALANCE:
+                new_balance = data.amount
+                if new_balance < 0:
+                    raise ApiError.conflict(t("ERR_BALANCE_NOT_ENOUGH"))
             case _:
                 raise RuntimeError(f"Unknown TransactionDirection: {data.direction}")
-
 
         user_balance.balance = new_balance
 
         transaction = BalanceTransaction(
             user_id=data.user_id,
             transaction_type=data.reason,
-            amount=data.amount,
+            amount=data.amount * (-1 if data.direction == TransactionDirection.DEBIT else 1),
             new_balance=new_balance
         )
         self.session.add(transaction)
