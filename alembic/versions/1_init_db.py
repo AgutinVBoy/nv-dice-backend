@@ -31,7 +31,7 @@ def upgrade() -> None:
     sa.Enum('over', 'under', name='game_bet_type_enum').create(op.get_bind())
     sa.Enum('win', 'lose', name='game_result_enum').create(op.get_bind())
     sa.Enum('active', 'expired', 'depleted', 'revoked', name='code_status_enum').create(op.get_bind())
-    sa.Enum('game', 'code_redeem', 'admin_adjust', name='transaction_type_enum').create(op.get_bind())
+    sa.Enum('game', 'code_redeem', 'admin_adjust', 'withdraw', name='transaction_type_enum').create(op.get_bind())
     op.create_table('roles',
     sa.Column('code', sa.String(length=10), nullable=False),
     sa.Column('label', sa.String(length=100), nullable=False),
