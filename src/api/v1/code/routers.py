@@ -17,6 +17,14 @@ code_router.add_api_route(
 
 code_router.add_api_route(
     path="/{code_id}",
+    endpoint=handlers.get_code_by_id,
+    methods=["GET"],
+    summary=t("API_GET_CODE"),
+    dependencies=[Depends(require_admin())],
+)
+
+code_router.add_api_route(
+    path="/{code_id}",
     endpoint=handlers.update_code,
     methods=["PUT"],
     summary=t("API_UPDATE_CODE"),

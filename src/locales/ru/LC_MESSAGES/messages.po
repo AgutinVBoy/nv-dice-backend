@@ -117,6 +117,9 @@ msgstr "Вывести средства"
 msgid "API_MODIFY_BALANCE"
 msgstr "Редактировать баланс"
 
+msgid "API_GET_CODE"
+msgstr "Получить код по ID"
+
 msgid "API_CREATE_CODE"
 msgstr "Создать новый код"
 

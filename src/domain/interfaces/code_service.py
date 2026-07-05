@@ -5,6 +5,10 @@ from src.domain.dto.code import CodeDTO, CodeCreateDTO, CodePatchDTO
 
 class ICodeService(ABC):
     @abstractmethod
+    async def get_code_by_id(self, code_id: int) -> CodeDTO:
+        ...
+
+    @abstractmethod
     async def create_code(self, user_id: int, data: CodeCreateDTO) -> CodeDTO:
         ...
 

@@ -38,6 +38,13 @@ class CodeService(ICodeService):
 
         return errors
 
+    async def get_code_by_id(self, code_id: int) -> CodeDTO:
+        code: Code = (
+            await self.session.execute(select(Code).where(Code.id == code_id).with_for_update())).scalar_one_or_none()
+        if not code:
+            raise ApiError.not_found(t("ERR_CODE_NOT_FOUND"))
+        return CodeDTO.model_validate(code)
+
     async def create_code(self, user_id: int, data: CodeCreateDTO) -> CodeDTO:
         if await self.session.scalar(select(exists().where(Code.code == data.code))):
             raise ApiError.conflict(t("ERR_CODE_ALREADY_EXISTS"))

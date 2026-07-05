@@ -6,6 +6,14 @@ from src.domain.dto.code import CodeCreateDTO, CodeDTO, CodePatchDTO
 from src.domain.interfaces.code_service import ICodeService
 
 
+async def get_code_by_id(
+        *,
+        code_service: FromDishka[ICodeService],
+        code_id: int = Path(..., description=t("DESC_CODE_ID"), ge=1),
+) -> CodeDTO:
+    return await code_service.get_code_by_id(code_id)
+
+
 async def create_code(
         *,
         code_service: FromDishka[ICodeService],
