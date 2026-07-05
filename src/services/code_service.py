@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 
 from sqlalchemy import select, exists
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -32,7 +32,7 @@ class CodeService(ICodeService):
         if code.starts_at and code.expires_at and code.starts_at > code.expires_at:
             errors.add_error("code_validity_period", t("ERR_CODE_INVALID_STARTS_EXPIRES_DATES_INCOMPATIBLE"))
 
-        if code.expires_at and code.status == CodeStatus.ACTIVE and code.expires_at <= datetime.now(timezone.utc):
+        if code.expires_at and code.status == CodeStatus.ACTIVE and code.expires_at <= datetime.now():
             errors.add_error("code_validity_period", t("ERR_CODE_INVALID_EXPIRES_DATE_INCOMPATIBLE_WITH_ACTIVE_STATUS",
                                                        expires_at=code.expires_at.strftime(DATETIME_MASK)))
 
@@ -62,7 +62,6 @@ class CodeService(ICodeService):
         await self.session.commit()
         return CodeDTO.model_validate(code)
 
-    # TODO: Протестировать PUT, PATCH
     async def update_code(self, user_id: int, code_id: int, data: CodeCreateDTO | CodePatchDTO) -> CodeDTO:
         code: Code = (
             await self.session.execute(select(Code).where(Code.id == code_id).with_for_update())).scalar_one_or_none()

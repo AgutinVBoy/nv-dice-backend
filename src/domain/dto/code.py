@@ -8,12 +8,12 @@ from src.domain.entities.enums import CodeStatus
 class CodeBaseDTO(BaseModel):
     code: UppercaseStr = Field(min_length=3, max_length=255)
     amount: Balance = Field(gt=0)
-    status: CodeStatus = CodeStatus.ACTIVE
-    max_uses: int = Field(gt=0, default=1)
-    uses_count: int = Field(ge=0, default=0)
-    max_uses_per_user: int = Field(gt=0, default=1)
-    starts_at: CustomDateTime | None = None
-    expires_at: CustomDateTime | None = None
+    status: CodeStatus
+    max_uses: int = Field(gt=0)
+    uses_count: int = Field(ge=0)
+    max_uses_per_user: int = Field(gt=0)
+    starts_at: CustomDateTime | None
+    expires_at: CustomDateTime | None
 
 
 class CodeCreateDTO(CodeBaseDTO):

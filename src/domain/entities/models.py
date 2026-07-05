@@ -109,6 +109,7 @@ class Role(Base):
 
 class Code(Base):
     __tablename__ = "codes"
+    __mapper_args__ = {"eager_defaults": True}
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     code: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)

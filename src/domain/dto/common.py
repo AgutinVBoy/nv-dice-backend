@@ -33,7 +33,7 @@ StrongPassword = Annotated[
 
 CustomDateTime = Annotated[
     datetime,
-    PlainSerializer(lambda dt: dt.strftime(DATETIME_MASK), return_type=str)
+    PlainSerializer(lambda dt: dt.strftime(DATETIME_MASK), return_type=str, when_used="json")
 ]
 
 UppercaseStr = Annotated[
