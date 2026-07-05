@@ -32,6 +32,11 @@ msgstr "Ошибка шлюза"
 msgid "ERR_INTERNAL_SERVER_ERROR"
 msgstr "Внутренняя ошибка сервера"
 
+# Errors: codes
+
+msgid "ERR_CODE_ALREADY_EXISTS"
+msgstr "Код с таким названием уже существует"
+
 # Errors: auth
 
 msgid "ERR_INVALID_CREDENTIALS"
@@ -101,6 +106,11 @@ msgstr "Вывести средства"
 msgid "API_MODIFY_BALANCE"
 msgstr "Редактировать баланс"
 
+# Descriptions: code
+
+msgid "API_CREATE_CODE"
+msgstr "Создать новый код"
+
 # Errors: validation
 
 msgid "ERR_PASSWORD_NO_UPPERCASE"
@@ -128,6 +138,9 @@ msgstr "Авторизация"
 
 msgid "BALANCE_LABEL"
 msgstr "Баланс"
+
+msgid "CODE_LABEL"
+msgstr "Коды"
 
 msgid "USERS_LABEL"
 msgstr "Пользователи"

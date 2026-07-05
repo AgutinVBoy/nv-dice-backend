@@ -11,11 +11,13 @@ from sqlalchemy.ext.asyncio import (
 from src.core.config import settings
 from src.domain.interfaces.auth_service import IAuthService
 from src.domain.interfaces.balance_service import IBalanceService
+from src.domain.interfaces.code_service import ICodeService
 from src.domain.interfaces.user_repo import IUserRepository
 from src.domain.interfaces.user_service import IUserService
 from src.infrastructure.repositories.postgres.user_repo import UserRepository
 from src.services.auth_service import AuthService
 from src.services.balance_service import BalanceService
+from src.services.code_service import CodeService
 from src.services.user_service import UserService
 
 
@@ -71,3 +73,9 @@ class ServiceProvider(Provider):
         self, session: AsyncSession
     ) -> IBalanceService:
         return BalanceService(session)
+
+    @provide(scope=Scope.REQUEST)
+    def get_code_service(
+        self, session: AsyncSession
+    ) -> ICodeService:
+        return CodeService(session)

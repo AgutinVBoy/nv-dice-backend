@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 from typing import Annotated
 
-from pydantic import Field, AfterValidator, PlainSerializer
+from pydantic import Field, AfterValidator, PlainSerializer, BeforeValidator
 
 from src.core.exceptions import ApiError
 from src.core.i18n import t
@@ -33,4 +33,9 @@ StrongPassword = Annotated[
 CustomDateTime = Annotated[
     datetime,
     PlainSerializer(lambda dt: dt.strftime('%Y-%m-%d %H:%M:%S'), return_type=str)
+]
+
+UppercaseStr = Annotated[
+    str,
+    BeforeValidator(lambda v: v.upper() if isinstance(v, str) else v)
 ]
