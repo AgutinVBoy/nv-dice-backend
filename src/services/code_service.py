@@ -2,13 +2,20 @@ from datetime import datetime
 
 from sqlalchemy import select, exists
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from src.core.exceptions import ApiError, ErrorCollector
 from src.core.i18n import t
-from src.domain.dto.code import CodeDTO, CodeCreateDTO, CodePatchDTO
+from src.domain.dto.code import (
+    CodeDTO,
+    CodeCreateDTO,
+    CodePatchDTO,
+    RedeemCodeRequestDTO,
+    RedeemCodeResponseDTO,
+)
 from src.domain.dto.common import DATETIME_MASK
-from src.domain.entities.enums import CodeStatus
-from src.domain.entities.models import Code
+from src.domain.entities.enums import CodeStatus, TransactionType
+from src.domain.entities.models import Code, CodeRedemptions, UserBalance, BalanceTransaction
 from src.domain.interfaces.code_service import ICodeService
 
 
@@ -93,5 +100,54 @@ class CodeService(ICodeService):
     async def delete_code(self, user_id: int, code_id: int) -> CodeDTO:
         pass
 
-    async def redeem_code(self, user_id: int, code: str):
-        pass
+    async def redeem_code(self, user_id: int, data: RedeemCodeRequestDTO) -> RedeemCodeResponseDTO:
+        user_balance_query = select(UserBalance).where(UserBalance.user_id == user_id).with_for_update()
+        code_query = select(Code).where(Code.code == data.code).options(
+                joinedload(Code.redemptions.and_(CodeRedemptions.user_id == user_id))
+            ).with_for_update(of=Code)
+
+        user_balance: UserBalance = (await self.session.execute(user_balance_query)).scalar_one_or_none()
+        code: Code = (await self.session.execute(code_query)).unique().scalar_one_or_none()
+
+        if not code or code.status == CodeStatus.REVOKED or (code.starts_at and code.starts_at >= datetime.now()):
+            raise ApiError.not_found(t("ERR_CODE_NOT_FOUND"))
+
+        if code.status == CodeStatus.DEPLETED or code.uses_count >= code.max_uses:
+            code.status = CodeStatus.DEPLETED
+            await self.session.commit()
+            raise ApiError.conflict(t("ERR_CODE_IS_DEPLETED"))
+
+        if code.status == CodeStatus.EXPIRED or (code.expires_at and code.expires_at <= datetime.now()):
+            code.status = CodeStatus.EXPIRED
+            await self.session.commit()
+            raise ApiError.conflict(t("ERR_CODE_IS_EXPIRED"))
+
+        if len(code.redemptions) >= code.max_uses_per_user:
+            raise ApiError.conflict(t("ERR_CODE_IS_DEPLETED_PER_USER"))
+
+        user_balance.balance += code.amount
+        code.uses_count += 1
+
+        if code.uses_count >= code.max_uses:
+            code.status = CodeStatus.DEPLETED
+
+        redemption = CodeRedemptions(
+            user_id=user_id,
+            code_id=code.id,
+            amount=code.amount,
+        )
+        self.session.add(redemption)
+        await self.session.flush()
+
+        transaction = BalanceTransaction(
+            user_id=user_id,
+            transaction_type=TransactionType.CODE_REDEEM,
+            amount=code.amount,
+            new_balance=user_balance.balance,
+            code_redemption_id=redemption.id,
+        )
+
+        self.session.add(transaction)
+        await self.session.commit()
+
+        return RedeemCodeResponseDTO(code=data.code, amount=code.amount, new_balance=user_balance.balance)

@@ -1,6 +1,12 @@
 from abc import ABC, abstractmethod
 
-from src.domain.dto.code import CodeDTO, CodeCreateDTO, CodePatchDTO
+from src.domain.dto.code import (
+    CodeDTO,
+    CodeCreateDTO,
+    CodePatchDTO,
+    RedeemCodeRequestDTO,
+    RedeemCodeResponseDTO,
+)
 
 
 class ICodeService(ABC):
@@ -21,5 +27,5 @@ class ICodeService(ABC):
         ...
 
     @abstractmethod
-    async def redeem_code(self, user_id: int, code: str):
+    async def redeem_code(self, user_id: int, data: RedeemCodeRequestDTO) -> RedeemCodeResponseDTO:
         ...

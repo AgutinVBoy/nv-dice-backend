@@ -38,7 +38,7 @@ msgid "ERR_CODE_ALREADY_EXISTS"
 msgstr "Код с таким названием уже существует"
 
 msgid "ERR_CODE_NOT_FOUND"
-msgstr "Запрошенный код не существует"
+msgstr "Запрошенный код не найден"
 
 msgid "ERR_CODE_INVALID"
 msgstr "Информация о коде содержит ошибки"
@@ -54,6 +54,15 @@ msgstr "Недопустимый промежуток времени жизни 
 
 msgid "ERR_CODE_INVALID_EXPIRES_DATE_INCOMPATIBLE_WITH_ACTIVE_STATUS"
 msgstr "При выбранной дате истечения кода ({expires_at}) невозможно установить статус ACTIVE"
+
+msgid "ERR_CODE_IS_DEPLETED"
+msgstr "Код уже активирован максимальное количество раз"
+
+msgid "ERR_CODE_IS_DEPLETED_PER_USER"
+msgstr "Вы уже активировали этот код максимальное количество раз"
+
+msgid "ERR_CODE_IS_EXPIRED"
+msgstr "Срок действия кода истёк"
 
 # Errors: auth
 
@@ -125,6 +134,9 @@ msgstr "Создать новый код"
 
 msgid "API_UPDATE_CODE"
 msgstr "Обновить существующий код"
+
+msgid "API_REDEEM_CODE"
+msgstr "Погасить код"
 
 # Descriptions: users
 

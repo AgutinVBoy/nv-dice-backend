@@ -39,3 +39,12 @@ class CodeDTO(CodeBaseDTO):
     updated_at: CustomDateTime | None
     created_by_id: int | None
     updated_by_id: int | None
+
+
+class RedeemCodeRequestDTO(BaseModel):
+    code: UppercaseStr = Field(min_length=3, max_length=255)
+
+
+class RedeemCodeResponseDTO(RedeemCodeRequestDTO):
+    amount: Balance
+    new_balance: Balance

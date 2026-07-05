@@ -2,7 +2,13 @@ from dishka import FromDishka
 from fastapi import Request, Path
 
 from src.core.i18n import t
-from src.domain.dto.code import CodeCreateDTO, CodeDTO, CodePatchDTO
+from src.domain.dto.code import (
+    CodeCreateDTO,
+    CodeDTO,
+    CodePatchDTO,
+    RedeemCodeRequestDTO,
+    RedeemCodeResponseDTO,
+)
 from src.domain.interfaces.code_service import ICodeService
 
 
@@ -41,3 +47,12 @@ async def patch_code(
         request: Request,
 ) -> CodeDTO:
     return await code_service.update_code(request.state.current_user, code_id, body)
+
+
+async def redeem_code(
+        *,
+        code_service: FromDishka[ICodeService],
+        body: RedeemCodeRequestDTO,
+        request: Request,
+) -> RedeemCodeResponseDTO:
+    return await code_service.redeem_code(request.state.current_user, body)

@@ -16,6 +16,13 @@ code_router.add_api_route(
 )
 
 code_router.add_api_route(
+    path="/redeem",
+    endpoint=handlers.redeem_code,
+    methods=["POST"],
+    summary=t("API_REDEEM_CODE"),
+)
+
+code_router.add_api_route(
     path="/{code_id}",
     endpoint=handlers.get_code_by_id,
     methods=["GET"],
