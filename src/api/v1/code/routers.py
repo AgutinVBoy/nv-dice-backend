@@ -14,3 +14,19 @@ code_router.add_api_route(
     summary=t("API_CREATE_CODE"),
     dependencies=[Depends(require_admin())],
 )
+
+code_router.add_api_route(
+    path="/{code_id}",
+    endpoint=handlers.update_code,
+    methods=["PUT"],
+    summary=t("API_UPDATE_CODE"),
+    dependencies=[Depends(require_admin())],
+)
+
+code_router.add_api_route(
+    path="/{code_id}",
+    endpoint=handlers.patch_code,
+    methods=["PATCH"],
+    summary=t("API_UPDATE_CODE"),
+    dependencies=[Depends(require_admin())],
+)

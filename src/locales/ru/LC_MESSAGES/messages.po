@@ -37,6 +37,24 @@ msgstr "Внутренняя ошибка сервера"
 msgid "ERR_CODE_ALREADY_EXISTS"
 msgstr "Код с таким названием уже существует"
 
+msgid "ERR_CODE_NOT_FOUND"
+msgstr "Запрошенный код не существует"
+
+msgid "ERR_CODE_INVALID"
+msgstr "Информация о коде содержит ошибки"
+
+msgid "ERR_CODE_INVALID_MAX_USES_LESS_THAN_USES_COUNT"
+msgstr "Максимальное количество активаций ({max_uses}) меньше, чем уже активированное количество ({uses_count})"
+
+msgid "ERR_CODE_INVALID_USES_COUNT_INCOMPATIBLE_WITH_ACTIVE_STATUS"
+msgstr "При выбранном количестве совершённых активаций ({uses_count}) невозможно установить статус ACTIVE"
+
+msgid "ERR_CODE_INVALID_STARTS_EXPIRES_DATES_INCOMPATIBLE"
+msgstr "Недопустимый промежуток времени жизни кода"
+
+msgid "ERR_CODE_INVALID_EXPIRES_DATE_INCOMPATIBLE_WITH_ACTIVE_STATUS"
+msgstr "При выбранной дате истечения кода ({expires_at}) невозможно установить статус ACTIVE"
+
 # Errors: auth
 
 msgid "ERR_INVALID_CREDENTIALS"
@@ -93,6 +111,18 @@ msgstr "Получить текущего пользователя"
 msgid "API_GET_USER"
 msgstr "Получить пользователя по ID"
 
+msgid "API_WITHDRAW"
+msgstr "Вывести средства"
+
+msgid "API_MODIFY_BALANCE"
+msgstr "Редактировать баланс"
+
+msgid "API_CREATE_CODE"
+msgstr "Создать новый код"
+
+msgid "API_UPDATE_CODE"
+msgstr "Обновить существующий код"
+
 # Descriptions: users
 
 msgid "DESC_USER_ID"
@@ -100,16 +130,12 @@ msgstr "ID пользователя"
 
 # Descriptions: balance
 
-msgid "API_WITHDRAW"
-msgstr "Вывести средства"
 
-msgid "API_MODIFY_BALANCE"
-msgstr "Редактировать баланс"
 
 # Descriptions: code
 
-msgid "API_CREATE_CODE"
-msgstr "Создать новый код"
+msgid "DESC_CODE_ID"
+msgstr "ID кода"
 
 # Errors: validation
 

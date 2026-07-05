@@ -7,6 +7,7 @@ from pydantic import Field, AfterValidator, PlainSerializer, BeforeValidator
 from src.core.exceptions import ApiError
 from src.core.i18n import t
 
+DATETIME_MASK = '%Y-%m-%d %H:%M:%S'
 
 def check_password_strength(v: str) -> str:
     errors = []
@@ -32,7 +33,7 @@ StrongPassword = Annotated[
 
 CustomDateTime = Annotated[
     datetime,
-    PlainSerializer(lambda dt: dt.strftime('%Y-%m-%d %H:%M:%S'), return_type=str)
+    PlainSerializer(lambda dt: dt.strftime(DATETIME_MASK), return_type=str)
 ]
 
 UppercaseStr = Annotated[
