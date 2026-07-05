@@ -1,9 +1,7 @@
-from datetime import datetime
-
 from pydantic import BaseModel, field_validator, Field, ConfigDict, AliasPath
 
 from src.domain.dto.balance import Balance
-from src.domain.dto.common import StrongPassword
+from src.domain.dto.common import StrongPassword, CustomDateTime
 from src.domain.dto.role import RoleDTO
 
 
@@ -33,5 +31,5 @@ class UserBalanceDTO(UserResponseDTO):
 
 class UserAdminResponseDTO(UserBalanceDTO):
     is_active: bool
-    registered_at: datetime
-    password_updated_at: datetime
+    registered_at: CustomDateTime
+    password_updated_at: CustomDateTime
