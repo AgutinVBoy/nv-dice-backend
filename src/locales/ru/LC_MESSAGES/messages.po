@@ -138,6 +138,9 @@ msgstr "Обновить существующий код"
 msgid "API_REDEEM_CODE"
 msgstr "Погасить код"
 
+msgid "API_INIT_GAME"
+msgstr "Инициализировать игру"
+
 # Descriptions: users
 
 msgid "DESC_USER_ID"
@@ -182,6 +185,9 @@ msgstr "Баланс"
 
 msgid "CODE_LABEL"
 msgstr "Коды"
+
+msgid "GAME_LABEL"
+msgstr "Игра"
 
 msgid "USERS_LABEL"
 msgstr "Пользователи"
