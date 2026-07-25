@@ -64,6 +64,11 @@ msgstr "Вы уже активировали этот код максималь�
 msgid "ERR_CODE_IS_EXPIRED"
 msgstr "Срок действия кода истёк"
 
+# Errors: games
+
+msgid "ERR_GAME_NOT_FOUND"
+msgstr "Запрошенная игра не найдена, уже сыграна или устарела"
+
 # Errors: auth
 
 msgid "ERR_INVALID_CREDENTIALS"
@@ -140,6 +145,9 @@ msgstr "Погасить код"
 
 msgid "API_INIT_GAME"
 msgstr "Инициализировать игру"
+
+msgid "API_PROCESS_GAME"
+msgstr "Сыграть игру"
 
 # Descriptions: users
 

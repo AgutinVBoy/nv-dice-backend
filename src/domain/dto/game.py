@@ -15,7 +15,7 @@ class GameBaseDTO(GameHashDTO):
 
 
 class GameBetDTO(GameHashDTO):
-    bet_amount: Balance = Field(ge=1)
+    bet_amount: Balance
     bet_type: GameBetType
     probability: int = Field(ge=1, le=95)
 
