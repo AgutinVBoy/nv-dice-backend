@@ -11,7 +11,7 @@ from src.api.middlewares.auth import JWTAuthMiddleware, PUBLIC_PATHS
 from src.api.v1 import v1_router
 from src.core.config import settings
 from src.core.exceptions import setup_exception_handlers
-from src.core.ioc import DatabaseProvider, RepositoryProvider, ServiceProvider
+from src.core.ioc import DatabaseProvider, RepositoryProvider, ServiceProvider, RedisProvider
 from src.core.logger import get_log_config
 from src.core.openapi import setup_openapi_bearer_auth
 
@@ -42,6 +42,7 @@ def create_app() -> FastAPI:
 
     container = make_async_container(
         DatabaseProvider(),
+        RedisProvider(),
         RepositoryProvider(),
         ServiceProvider(),
     )

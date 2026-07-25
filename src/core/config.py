@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pydantic import SecretStr
+from pydantic import SecretStr, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -43,6 +43,12 @@ class Settings(BaseSettings):
     DB_PASSWORD: SecretStr
     DB_NAME: str
 
+    REDIS_HOST: str
+    REDIS_PORT: int = 6379
+    REDIS_USER: str
+    REDIS_PASSWORD: str
+    REDIS_DB_NAME: str
+
     JWT_SECRET_KEY: SecretStr
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
@@ -65,6 +71,17 @@ class Settings(BaseSettings):
             f"postgresql+psycopg://{self.DB_USER}:{self.DB_PASSWORD.get_secret_value()}"
             f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         )
+
+    @property
+    def redis_url(self) -> str:
+        return RedisDsn.build(
+            scheme="redis",
+            host=self.REDIS_HOST,
+            port=self.REDIS_PORT,
+            username=self.REDIS_USER,
+            password=self.REDIS_PASSWORD,
+            path=self.REDIS_DB_NAME
+        ).unicode_string()
 
 
 settings = Settings()

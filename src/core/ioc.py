@@ -1,6 +1,7 @@
 from collections.abc import AsyncIterator
 
 from dishka import Provider, Scope, provide
+from redis.asyncio import Redis, from_url
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -11,10 +12,12 @@ from sqlalchemy.ext.asyncio import (
 from src.core.config import settings
 from src.domain.interfaces.auth_service import IAuthService
 from src.domain.interfaces.balance_service import IBalanceService
+from src.domain.interfaces.cache_repo import ICacheRepository
 from src.domain.interfaces.code_service import ICodeService
 from src.domain.interfaces.user_repo import IUserRepository
 from src.domain.interfaces.user_service import IUserService
 from src.infrastructure.repositories.postgres.user_repo import UserRepository
+from src.infrastructure.repositories.redis.cache_repo import CacheRepository
 from src.services.auth_service import AuthService
 from src.services.balance_service import BalanceService
 from src.services.code_service import CodeService
@@ -47,6 +50,18 @@ class DatabaseProvider(Provider):
     ) -> AsyncIterator[AsyncSession]:
         async with factory() as session:
             yield session
+
+
+class RedisProvider(Provider):
+    @provide(scope=Scope.APP)
+    async def get_redis_client(self) -> AsyncIterator[Redis]:
+        client = from_url(settings.redis_url, decode_responses=True)
+        yield client
+        await client.aclose()
+
+    @provide(scope=Scope.REQUEST)
+    def provide_cache_gateway(self, redis: Redis) -> ICacheRepository:
+        return CacheRepository(redis)
 
 
 class RepositoryProvider(Provider):

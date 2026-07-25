@@ -17,3 +17,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  redis:
+    container_name: nv-dice-redis
+    image: redis:7-alpine
+    expose:
+      - "${REDIS_PORT}"
+    command: >-
+      sh -c 'if [ -n "$$REDIS_USER" ]; then set -- --user default off --user "$$REDIS_USER" on "~*" "+@all" ">$$REDISCLI_AUTH"; elif [ -n "$$REDISCLI_AUTH" ]; then set -- --requirepass "$$REDISCLI_AUTH"; fi; exec redis-server --port "${REDIS_PORT}" "$$@"'
+    environment:
+      REDIS_USER: ${REDIS_USER}
+      REDISCLI_AUTH: ${REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "${REDIS_PORT}", "ping"]
+      start_period: 3s
+      interval: 10s
+      timeout: 5s
+      retries: 3
