@@ -121,4 +121,4 @@ class GameService(IGameService):
         await self.cache_repository.create_new_game(user_id, new_game)
 
         await self.session.commit()
-        return GameResponseDTO(current_game=GameResultDTO.model_validate(game_result), next_game=new_game)
+        return GameResponseDTO(current_game=GameResultDTO.model_validate(game_result), next_game=new_game, new_balance=user_balance.balance)

@@ -34,3 +34,4 @@ class GameResultDTO(GameBaseDTO, GameBetDTO):
 class GameResponseDTO(BaseModel):
     current_game: GameResultDTO
     next_game: GameHashDTO
+    new_balance: Balance
