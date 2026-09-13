@@ -12,7 +12,7 @@ code_router.add_api_route(
     endpoint=handlers.create_code,
     methods=["POST"],
     summary=t("API_CREATE_CODE"),
-    dependencies=[Depends(require_admin())],
+    dependencies=[Depends(require_admin)],
 )
 
 code_router.add_api_route(
@@ -27,7 +27,7 @@ code_router.add_api_route(
     endpoint=handlers.get_code_by_id,
     methods=["GET"],
     summary=t("API_GET_CODE"),
-    dependencies=[Depends(require_admin())],
+    dependencies=[Depends(require_admin)],
 )
 
 code_router.add_api_route(
@@ -35,7 +35,7 @@ code_router.add_api_route(
     endpoint=handlers.update_code,
     methods=["PUT"],
     summary=t("API_UPDATE_CODE"),
-    dependencies=[Depends(require_admin())],
+    dependencies=[Depends(require_admin)],
 )
 
 code_router.add_api_route(
@@ -43,5 +43,5 @@ code_router.add_api_route(
     endpoint=handlers.patch_code,
     methods=["PATCH"],
     summary=t("API_UPDATE_CODE"),
-    dependencies=[Depends(require_admin())],
+    dependencies=[Depends(require_admin)],
 )

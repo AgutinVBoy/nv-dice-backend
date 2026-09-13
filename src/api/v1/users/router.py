@@ -19,5 +19,5 @@ user_router.add_api_route(
     endpoint=handlers.get_user,
     methods=["GET"],
     summary=t("API_GET_USER"),
-    dependencies=[Depends(require_admin())],
+    dependencies=[Depends(require_admin)],
 )

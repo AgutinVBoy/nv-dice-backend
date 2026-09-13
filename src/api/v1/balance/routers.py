@@ -12,7 +12,7 @@ balance_router.add_api_route(
     endpoint=handlers.modify_balance,
     methods=["POST"],
     summary=t("API_MODIFY_BALANCE"),
-    dependencies=[Depends(require_admin())],
+    dependencies=[Depends(require_admin)],
 )
 
 balance_router.add_api_route(
