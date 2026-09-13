@@ -7,13 +7,11 @@ from fastapi import FastAPI
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.api.middlewares.auth import JWTAuthMiddleware, PUBLIC_PATHS
 from src.api.v1 import v1_router
 from src.core.config import settings
 from src.core.exceptions import setup_exception_handlers
 from src.core.ioc import DatabaseProvider, RepositoryProvider, ServiceProvider, RedisProvider
 from src.core.logger import get_log_config
-from src.core.openapi import setup_openapi_bearer_auth
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +23,6 @@ MIDDLEWARES = [
         allow_methods=["*"],
         allow_headers=["*"],
     ),
-    Middleware(JWTAuthMiddleware),
 ]
 
 ROUTERS = [
@@ -52,8 +49,6 @@ def create_app() -> FastAPI:
 
     for router, prefix in ROUTERS:
         app.include_router(router, prefix=prefix)
-
-    setup_openapi_bearer_auth(app, PUBLIC_PATHS)
 
     return app
 

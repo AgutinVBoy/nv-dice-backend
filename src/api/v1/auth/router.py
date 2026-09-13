@@ -1,6 +1,7 @@
 from dishka.integrations.fastapi import DishkaRoute
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from src.api.dependencies.auth import require_auth
 from src.core.i18n import t
 from . import handlers
 
@@ -32,4 +33,5 @@ auth_router.add_api_route(
     endpoint=handlers.change_password,
     methods=["POST"],
     summary=t("API_CHANGE_PASSWORD"),
+    dependencies=[Depends(require_auth)],
 )
