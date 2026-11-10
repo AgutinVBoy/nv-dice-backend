@@ -6,3 +6,8 @@ services:
   redis:
     ports:
       - "${REDIS_EXTERNAL_PORT}:${REDIS_PORT}"
+
+  app:
+    volumes:
+      - ./src:/app/src:ro
+      - ./gunicorn_conf.py:/app/gunicorn_conf.py:ro

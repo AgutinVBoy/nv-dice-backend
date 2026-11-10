@@ -34,3 +34,24 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+
+  migrate:
+    container_name: nv-dice-migrate
+    build: .
+    env_file: .env
+    command: [ "alembic", "upgrade", "head" ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  app:
+    container_name: nv-dice-app
+    build: .
+    env_file: .env
+    ports:
+      - "${APP_EXTERNAL_PORT}:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
