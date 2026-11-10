@@ -1,11 +1,11 @@
 from pydantic import BaseModel
 
-from src.domain.dto.common import StrongPassword
+from src.domain.dto.common import Password, StrongPassword
 from src.domain.dto.user import UserBaseDTO
 
 
 class LoginDTO(UserBaseDTO):
-    password: str
+    password: Password
 
 
 class RefreshTokenDTO(BaseModel):
@@ -13,7 +13,7 @@ class RefreshTokenDTO(BaseModel):
 
 
 class ChangePasswordDTO(BaseModel):
-    old_password: str
+    old_password: Password
     new_password: StrongPassword
 
 

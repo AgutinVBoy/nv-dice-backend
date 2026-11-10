@@ -8,6 +8,16 @@ from src.core.exceptions import ApiError
 from src.core.i18n import t
 
 DATETIME_MASK = '%Y-%m-%d %H:%M:%S'
+MAX_PASSWORD_BYTES = 72
+
+
+def check_password_byte_length(v: str) -> str:
+    if len(v.encode("utf-8")) > MAX_PASSWORD_BYTES:
+        raise ApiError.unprocessable_entity(
+            t("ERR_PASSWORD_TOO_LONG")
+        )
+    return v
+
 
 def check_password_strength(v: str) -> str:
     errors = []
@@ -25,9 +35,14 @@ def check_password_strength(v: str) -> str:
     return v
 
 
-StrongPassword = Annotated[
+Password = Annotated[
     str,
-    Field(min_length=8, max_length=128),
+    AfterValidator(check_password_byte_length),
+]
+
+StrongPassword = Annotated[
+    Password,
+    Field(min_length=8),
     AfterValidator(check_password_strength)
 ]
 
