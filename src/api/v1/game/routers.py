@@ -14,6 +14,20 @@ game_router.add_api_route(
 )
 
 game_router.add_api_route(
+    path="/history",
+    endpoint=handlers.get_game_history,
+    methods=["GET"],
+    summary=t("API_GET_GAME_HISTORY"),
+)
+
+game_router.add_api_route(
+    path="/history/{game_id}",
+    endpoint=handlers.get_game_by_id,
+    methods=["GET"],
+    summary=t("API_GET_GAME_BY_ID"),
+)
+
+game_router.add_api_route(
     path="/init",
     endpoint=handlers.init_game,
     methods=["POST"],

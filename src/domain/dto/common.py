@@ -1,14 +1,22 @@
 import re
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Generic, TypeVar
 
-from pydantic import Field, AfterValidator, PlainSerializer, BeforeValidator
+from pydantic import BaseModel, Field, AfterValidator, PlainSerializer, BeforeValidator
 
 from src.core.exceptions import ApiError
 from src.core.i18n import t
 
 DATETIME_MASK = '%Y-%m-%d %H:%M:%S'
 MAX_PASSWORD_BYTES = 72
+ItemT = TypeVar("ItemT")
+
+
+class PaginationDTO(BaseModel, Generic[ItemT]):
+    page: int
+    per_page: int
+    items: list[ItemT]
+    has_more: bool
 
 
 def check_password_byte_length(v: str) -> str:

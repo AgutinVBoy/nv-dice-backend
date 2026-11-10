@@ -69,6 +69,9 @@ msgstr "Срок действия кода истёк"
 msgid "ERR_GAME_NOT_FOUND"
 msgstr "Запрошенная игра не найдена, уже сыграна или устарела"
 
+msgid "ERR_GAME_RESULT_NOT_FOUND"
+msgstr "Результат игры не найден"
+
 # Errors: auth
 
 msgid "ERR_INVALID_CREDENTIALS"
@@ -148,6 +151,28 @@ msgstr "Инициализировать игру"
 
 msgid "API_PROCESS_GAME"
 msgstr "Сыграть игру"
+
+msgid "API_GET_GAME_HISTORY"
+msgstr "Получить историю игр"
+
+msgid "API_GET_GAME_BY_ID"
+msgstr "Получить результат игры по ID"
+
+# Descriptions: pagination
+
+msgid "DESC_PAGE"
+msgstr "Номер страницы"
+
+msgid "DESC_PER_PAGE"
+msgstr "Количество записей на странице"
+
+# Descriptions: games
+
+msgid "DESC_GAME_ID"
+msgstr "ID игры"
+
+msgid "DESC_GAME_HISTORY_USER_ID"
+msgstr "ID пользователя; по умолчанию: текущий пользователь"
 
 # Descriptions: users
 

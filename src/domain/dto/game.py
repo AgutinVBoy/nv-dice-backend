@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 
 from src.domain.dto.balance import Balance
-from src.domain.dto.common import CustomDateTime
+from src.domain.dto.common import CustomDateTime, PaginationDTO
 from src.domain.entities.enums import GameBetType, GameResult
 
 
@@ -35,3 +35,7 @@ class GameResponseDTO(BaseModel):
     current_game: GameResultDTO
     next_game: GameHashDTO
     new_balance: Balance
+
+
+class GameHistoryDTO(PaginationDTO[GameResultDTO]):
+    pass

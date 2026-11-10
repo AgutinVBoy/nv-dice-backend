@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.exceptions import ApiError
 from src.core.i18n import t
 from src.domain.dto.balance import BalanceChangeDTO
-from src.domain.dto.game import GameBetDTO, GameResponseDTO, GameHashDTO, GameBaseDTO, GameResultDTO
+from src.domain.dto.game import GameBetDTO, GameResponseDTO, GameHashDTO, GameBaseDTO, GameResultDTO, GameHistoryDTO
 from src.domain.entities.enums import GameBetType, TransactionDirection, TransactionType, GameResult
 from src.domain.entities.models import Game, BalanceTransaction, UserBalance
 from src.domain.interfaces.balance_service import IBalanceService
@@ -37,6 +37,30 @@ class GameService(IGameService):
         self.balance_service = balance_service
         self.cache_repository = cache_repository
         self.session = session
+
+    async def get_game_history(self, user_id: int, page: int, per_page: int) -> GameHistoryDTO:
+        games = (await self.session.scalars(
+            select(Game)
+            .where(Game.user_id == user_id)
+            .order_by(Game.created_at.desc(), Game.id.desc())
+            .offset((page - 1) * per_page)
+            .limit(per_page + 1)
+        )).all()
+        return GameHistoryDTO(
+            items=games[:per_page],
+            has_more=len(games) > per_page,
+            page=page,
+            per_page=per_page,
+        )
+
+    async def get_game_by_id(self, user_id: int, game_id: int, *, is_admin: bool = False) -> GameResultDTO:
+        query = select(Game).where(Game.id == game_id)
+        if not is_admin:
+            query = query.where(Game.user_id == user_id)
+        game = await self.session.scalar(query)
+        if game is None:
+            raise ApiError.not_found(t("ERR_GAME_RESULT_NOT_FOUND"))
+        return GameResultDTO.model_validate(game)
 
     async def get_or_init_game(self, user_id: int) -> GameHashDTO:
         game = await self.cache_repository.get_game(user_id)
