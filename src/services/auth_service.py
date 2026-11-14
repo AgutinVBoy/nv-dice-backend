@@ -1,4 +1,4 @@
-from datetime import timezone
+from uuid import UUID, uuid4
 
 from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,10 +20,10 @@ from src.domain.interfaces.auth_service import IAuthService
 from src.domain.interfaces.user_repo import IUserRepository
 
 
-def _generate_tokens(user_id: int) -> TokenResponseDTO:
+def _generate_tokens(user_id: int, token_version: UUID) -> TokenResponseDTO:
     return TokenResponseDTO(
-        access_token=create_access_token(user_id),
-        refresh_token=create_refresh_token(user_id),
+        access_token=create_access_token(user_id, token_version),
+        refresh_token=create_refresh_token(user_id, token_version),
         access_token_expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         refresh_token_expires_in=settings.REFRESH_TOKEN_EXPIRE_DAYS * 86400,
     )
@@ -43,7 +43,7 @@ class AuthService(IAuthService):
         if not user.is_active:
             raise ApiError.unauthorized(t("ERR_USER_INACTIVE"))
 
-        return _generate_tokens(user.id)
+        return _generate_tokens(user.id, user.token_version)
 
     async def register(self, data: UserCreateDTO) -> TokenResponseDTO:
         existing = await self.user_repo.get_by_username(data.username)
@@ -55,7 +55,7 @@ class AuthService(IAuthService):
         await self.session.merge(UserBalance(user_id=user.id))
 
         await self.session.commit()
-        return _generate_tokens(user.id)
+        return _generate_tokens(user.id, user.token_version)
 
     async def refresh(self, data: RefreshTokenDTO) -> TokenResponseDTO:
         payload = validate_refresh_token(data.refresh_token)
@@ -66,11 +66,10 @@ class AuthService(IAuthService):
         if not user or not user.is_active:
             raise ApiError.unauthorized(t("ERR_UNAUTHORIZED"))
 
-        pwd_ts = user.password_updated_at.replace(tzinfo=timezone.utc)
-        if payload.iat < pwd_ts:
+        if payload.token_version != user.token_version:
             raise ApiError.unauthorized(t("ERR_TOKEN_REVOKED"))
 
-        return _generate_tokens(user.id)
+        return _generate_tokens(user.id, user.token_version)
 
     async def change_password(
         self, user_id: int, data: ChangePasswordDTO
@@ -84,7 +83,8 @@ class AuthService(IAuthService):
 
         user.password = hash_password(data.new_password)
         user.password_updated_at = func.now()
+        user.token_version = uuid4()
         await self.user_repo.update(user)
         await self.session.commit()
 
-        return _generate_tokens(user.id)
+        return _generate_tokens(user.id, user.token_version)

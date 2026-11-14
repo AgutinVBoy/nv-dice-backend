@@ -1,6 +1,7 @@
 import typing as tp
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from uuid import UUID
 
 import bcrypt
 import jwt
@@ -13,16 +14,22 @@ DEFAULT_ENCODING = "utf-8"
 @dataclass(frozen=True)
 class TokenPayload:
     user_id: int
-    iat: datetime
+    token_version: UUID
 
 
-def _create_token(user_id: int | str, token_type: str, expires_delta: timedelta) -> str:
+def _create_token(
+    user_id: int | str,
+    token_type: str,
+    expires_delta: timedelta,
+    token_version: UUID,
+) -> str:
     now = datetime.now(tz=timezone.utc)
     payload = {
         "sub": str(user_id),
         "iat": now,
         "exp": now + expires_delta,
         "type": token_type,
+        "ver": str(token_version),
     }
     return jwt.encode(
         payload,
@@ -43,21 +50,28 @@ def _validate_token(token: str, expected_type: str) -> tp.Optional[TokenPayload]
         sub = payload.get("sub")
         if not sub:
             return None
-        iat = datetime.fromtimestamp(payload["iat"], tz=timezone.utc)
-        return TokenPayload(user_id=int(sub), iat=iat)
+        if not (token_version := payload.get("ver")) or not isinstance(token_version, str):
+            return None
+        return TokenPayload(user_id=int(sub), token_version=UUID(token_version))
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, ValueError, KeyError):
         return None
 
 
-def create_access_token(user_id: int | str) -> str:
+def create_access_token(user_id: int | str, token_version: UUID) -> str:
     return _create_token(
-        user_id, "access", timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        user_id,
+        "access",
+        timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
+        token_version,
     )
 
 
-def create_refresh_token(user_id: int | str) -> str:
+def create_refresh_token(user_id: int | str, token_version: UUID) -> str:
     return _create_token(
-        user_id, "refresh", timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
+        user_id,
+        "refresh",
+        timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
+        token_version,
     )
 
 

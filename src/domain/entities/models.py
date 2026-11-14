@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from decimal import Decimal
+from uuid import UUID, uuid4
 
 from sqlalchemy import (
     BigInteger,
@@ -14,7 +15,7 @@ from sqlalchemy import (
     CheckConstraint,
     Index,
 )
-from sqlalchemy.dialects.postgresql import ENUM as PgEnum
+from sqlalchemy.dialects.postgresql import ENUM as PgEnum, UUID as PgUUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 from src.domain.entities.enums import (
@@ -43,6 +44,7 @@ class User(Base):
     registered_at: Mapped[datetime] = mapped_column(server_default=func.now())
     password: Mapped[str] = mapped_column(Text, nullable=False)
     password_updated_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    token_version: Mapped[UUID] = mapped_column(PgUUID, server_default=func.gen_random_uuid(), default=uuid4)
 
     balance_ref: Mapped[UserBalance] = relationship(back_populates="user_ref", lazy="raise")
     role_ref: Mapped[Role] = relationship(foreign_keys=[role], lazy="raise")
