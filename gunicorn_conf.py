@@ -3,7 +3,7 @@ import multiprocessing
 from src.core.logger import get_log_config
 
 bind = "0.0.0.0:8000"
-workers = int(os.getenv("APP_WORKERS_COUNT", multiprocessing.cpu_count() * 2 + 1))
+workers = int(os.getenv("APP_WORKERS_COUNT", min(multiprocessing.cpu_count(), 4)))
 worker_class = "uvicorn.workers.UvicornWorker"
 
 max_requests = 5000
