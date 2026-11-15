@@ -1,5 +1,3 @@
-from datetime import timezone
-
 from dishka.integrations.fastapi import FromDishka, inject
 from fastapi import Depends, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -35,7 +33,7 @@ async def require_auth(
     async with factory() as session:
         row = (
             await session.execute(
-                select(User.is_active, User.password_updated_at, User.role).where(
+                select(User.is_active, User.token_version, User.role).where(
                     User.id == payload.user_id
                 )
             )
@@ -44,8 +42,7 @@ async def require_auth(
     if not row or not row.is_active:
         raise ApiError.unauthorized()
 
-    pwd_ts = row.password_updated_at.replace(tzinfo=timezone.utc)
-    if payload.iat < pwd_ts:
+    if payload.token_version != row.token_version:
         raise ApiError.unauthorized(t("ERR_TOKEN_REVOKED"))
 
     request.state.current_user = payload.user_id
